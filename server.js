@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
 // Form submission endpoint
 app.post('/api/contact', async (req, res) => {
   try {
-    const { name, email, phone, message, service } = req.body;
+    const { name, email, phone, notes, area, service } = req.body;
 
     console.log('Received form data:', req.body);
 
@@ -40,9 +40,10 @@ app.post('/api/contact', async (req, res) => {
         <p><strong>Name:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
+        ${area ? `<p><strong>Area:</strong> ${area}</p>` : ''}
         ${service ? `<p><strong>Service:</strong> ${service}</p>` : ''}
-        <p><strong>Message:</strong></p>
-        <p>${message.replace(/\n/g, '<br>')}</p>
+        <p><strong>Notes:</strong></p>
+        <p>${(notes || '').replace(/\n/g, '<br>')}</p>
       `,
     };
 
