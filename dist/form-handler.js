@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+function setupFormHandler() {
   // Find all forms and add submit handlers
   const forms = document.querySelectorAll('form');
 
@@ -6,15 +6,33 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
 
-      // Get form data
+      // Get form data - collect all fields
       const formData = new FormData(this);
+
+      // Create object from all form fields
+      const allData = {};
+      formData.forEach((value, key) => {
+        allData[key] = value;
+      });
+
+      console.log('Form data:', allData);
+
+      // Map fields to standard names (support multiple naming conventions)
       const data = {
-        name: formData.get('name') || formData.get('fullName') || formData.get('contact-name'),
-        email: formData.get('email') || formData.get('contact-email'),
-        phone: formData.get('phone') || formData.get('contact-phone') || '',
-        message: formData.get('message') || formData.get('contact-message') || '',
-        service: formData.get('service') || '',
+        name: allData.name || allData.fullName || allData['contact-name'] || allData.your_name || '',
+        email: allData.email || allData['contact-email'] || allData.your_email || '',
+        phone: allData.phone || allData['contact-phone'] || allData.your_phone || '',
+        message: allData.message || allData['contact-message'] || allData.your_message || '',
+        service: allData.service || allData['contact-service'] || '',
       };
+
+      console.log('Mapped data:', data);
+
+      // Validate
+      if (!data.name.trim() || !data.email.trim()) {
+        alert('Please fill in Name and Email fields');
+        return;
+      }
 
       try {
         const response = await fetch('/api/contact', {
@@ -40,4 +58,18 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
+}
+
+// Run on page load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupFormHandler);
+} else {
+  setupFormHandler();
+}
+
+// Also watch for dynamically added forms
+const observer = new MutationObserver(() => {
+  setupFormHandler();
 });
+
+observer.observe(document.body, { childList: true, subtree: true });
