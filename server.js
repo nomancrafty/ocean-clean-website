@@ -46,23 +46,8 @@ app.post('/api/contact', async (req, res) => {
       `,
     };
 
-    // Email to client
-    const clientMailOptions = {
-      from: process.env.SMTP_USER,
-      to: email,
-      subject: "We've Received Your Message - Ocean's Cleaning & Home Services",
-      html: `
-        <h2>Thank You, ${name}!</h2>
-        <p>We've received your message and will get back to you as soon as possible.</p>
-        <p>Our team typically responds within 24 hours.</p>
-        <br>
-        <p>Best regards,<br>Ocean's Cleaning & Home Services Team</p>
-      `,
-    };
-
-    // Send both emails
+    // Send email to admin only
     await transporter.sendMail(adminMailOptions);
-    await transporter.sendMail(clientMailOptions);
 
     res.json({ success: true, message: 'Email sent successfully' });
   } catch (error) {
