@@ -22,9 +22,12 @@ app.post('/api/contact', async (req, res) => {
   try {
     const { name, email, phone, message, service } = req.body;
 
-    // Validate required fields
-    if (!name || !email || !message) {
-      return res.status(400).json({ error: 'Missing required fields' });
+    console.log('Received form data:', req.body);
+
+    // Validate required fields - at least name and email
+    if (!name?.trim() || !email?.trim()) {
+      console.log('Validation failed:', { name, email });
+      return res.status(400).json({ error: 'Please provide Name and Email' });
     }
 
     // Email to admin
