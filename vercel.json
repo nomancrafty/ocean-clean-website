@@ -1,6 +1,6 @@
 {
   "outputDirectory": "dist",
-  "buildCommand": false,
+  "buildCommand": null,
   "rewrites": [
     { "source": "/((?!api/|assets/|favicon.svg).*)", "destination": "/index.html" }
   ]
